@@ -35,7 +35,7 @@ def read_sequences(filename="Spmap/uniprot-all.fasta"):
     return sequences
 
 
-def read_data(level=0, length_limit=None):
+def read_data(level=0, length_limit=None, skip_duplicate=True):
     """
     Reads sequence and hierarchical enzyme clustering labels.
     :param level: Level of the clustering from general to specific
@@ -70,6 +70,8 @@ def read_data(level=0, length_limit=None):
                 if p in sequences:
                     if sequences[p] in x_train:
                         duplicates.append(p)
+                        if skip_duplicate:
+                            continue
                     if length_limit is None or len(sequences[p]) <= length_limit:
                         x_train.append(sequences[p])
                         y_train.append(y)
@@ -87,6 +89,8 @@ def read_data(level=0, length_limit=None):
                 if p in sequences:
                     if sequences[p] in x_test:
                         duplicates.append(p)
+                        if skip_duplicate:
+                            continue
                     if length_limit is None or len(sequences[p]) <= length_limit:
                         x_test.append(sequences[p])
                         y_test.append(y)
