@@ -5,7 +5,7 @@ import numpy as np
 from readdata import read_data
 import collections
 
-x_train, y_train, x_text, y_test = read_data(level=0, length_limit=500)
+x_train, y_train, x_text, y_test = read_data(level=0, length_limit=750)
 
 # Vectorize the data.
 input_texts = []
@@ -66,8 +66,8 @@ for i, (input_text, target_text) in enumerate(zip(input_texts, target_texts)):
 
 
 batch_size = 32  # Batch size for training.
-epochs = 5  # Number of epochs to train for.
-latent_dim = 32  # Latent dimensionality of the encoding space.
+epochs = 10  # Number of epochs to train for.
+latent_dim = 16  # Latent dimensionality of the encoding space.
 
 # Define an input sequence and process it.
 encoder_inputs = Input(shape=(None, num_encoder_tokens))
@@ -109,7 +109,15 @@ model.save('s2s.h5')
 # 3) Repeat with the current target token and current states
 
 # Define sampling models
-encoder_model = Model(encoder_inputs, encoder_states)
+encoder_model = Model(inputs=encoder_inputs, outputs=encoder_states)
+
+# save encoder model
+encoder_model_yaml = encoder_model.to_yaml()
+with open("encoder_model.yaml", "w") as yaml_file:
+    yaml_file.write(encoder_model_yaml)
+encoder_model.save('encoder_model.h5')
+print("Saved model to disk")
+
 
 decoder_state_input_h = Input(shape=(latent_dim,))
 decoder_state_input_c = Input(shape=(latent_dim,))

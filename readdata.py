@@ -117,3 +117,21 @@ def read_data(level=0, length_limit=None, skip_duplicate=True):
     print('All count: ', all_count)
 
     return x_train, y_train, x_test, y_test #, sequences, all_proteins, multi_labels
+
+
+def extract_kmers(sequences):
+    """
+    Extracts the kmers in a dictionary of protein sequences.
+    :param sequences: dictionary of sequences
+    :return: list of all kmers with repetition
+    """
+    kmer_size = 5
+    all_kmers = list()
+    for key, value in sequences.items():
+        for i in range(0, len(value) - kmer_size + 1):
+            kmer = value[i:i + kmer_size]
+            all_kmers.append(kmer)
+
+    print("Kmers are extracted. Total number of Kmers: ", all_kmers.__len__())
+
+    return all_kmers
