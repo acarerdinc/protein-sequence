@@ -47,6 +47,10 @@ def read_data(level=0, length_limit=None, skip_duplicate=True):
     x_test = []
     y_test = []
     duplicates = []
+    missing_count = 0
+    all_count = 0
+    multi_labels = set()
+    all_proteins = set()
 
     path_positive_train = 'Spmap/positiveTrain'
     path_positive_test = 'Spmap/positiveTest'
@@ -67,6 +71,11 @@ def read_data(level=0, length_limit=None, skip_duplicate=True):
                 content = f.readlines()  # Read file content
             content = [x.strip() for x in content]
             for p in content:
+                all_count += 1
+                if p in all_proteins:
+                    multi_labels.add(p)
+                else:
+                    all_proteins.add(p)
                 if p in sequences:
                     if sequences[p] in x_train:
                         duplicates.append(p)
@@ -75,6 +84,8 @@ def read_data(level=0, length_limit=None, skip_duplicate=True):
                     if length_limit is None or len(sequences[p]) <= length_limit:
                         x_train.append(sequences[p])
                         y_train.append(y)
+                else:
+                    missing_count += 1
 
     # Read test data
     file_list = [f_name for f_name in listdir(path_positive_test)
@@ -86,6 +97,11 @@ def read_data(level=0, length_limit=None, skip_duplicate=True):
                 content = f.readlines()  # Read file content
             content = [x.strip() for x in content]
             for p in content:
+                all_count += 1
+                if p in all_proteins:
+                    multi_labels.add(p)
+                else:
+                    all_proteins.add(p)
                 if p in sequences:
                     if sequences[p] in x_test:
                         duplicates.append(p)
@@ -94,5 +110,10 @@ def read_data(level=0, length_limit=None, skip_duplicate=True):
                     if length_limit is None or len(sequences[p]) <= length_limit:
                         x_test.append(sequences[p])
                         y_test.append(y)
+                else:
+                    missing_count += 1
 
-    return x_train, y_train, x_test, y_test
+    print('Missing proteins: ', missing_count)
+    print('All count: ', all_count)
+
+    return x_train, y_train, x_test, y_test #, sequences, all_proteins, multi_labels
