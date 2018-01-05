@@ -116,7 +116,8 @@ def read_data(level=0, length_limit=None, skip_duplicate=True):
     print('Missing proteins: ', missing_count)
     print('All count: ', all_count)
 
-    return x_train, y_train, x_test, y_test #, sequences, all_proteins, multi_labels
+    return x_train, y_train, x_test, y_test #, sequences, all_proteins, multi_labels,
+    # duplicates
 
 
 def extract_kmers(sequences):
